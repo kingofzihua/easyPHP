@@ -8,32 +8,48 @@
 
 namespace Core\Component;
 
-
 use Core\AbstractInterface\ErrorHandlerInterface;
 use Core\Component\Spl\SplError;
 use Core\Http\Request;
 use Core\Http\Response;
 
+/**
+ * Class ErrorHandler
+ * @package Core\Component
+ */
 class ErrorHandler implements ErrorHandlerInterface
 {
 
-    function handler(SplError $error)
+    /**
+     * @param SplError $error
+     * @return mixed|void
+     */
+    public function handler(SplError $error)
     {
         // TODO: Implement handler() method.
     }
 
-    function display(SplError $error)
+    /**
+     * @param SplError $error
+     * @return mixed|void
+     */
+    public function display(SplError $error)
     {
-        // TODO: Implement display() method.
-        if(Request::getInstance()){
+        //判断 是不是浏览器过来的请求啊， 不是单元测试 并且不是CLI模式的时候 是输出到页面的
+        if (Request::getInstance()) {
+            //写入 Response
             Response::getInstance()->write($error->__toString());
-        }else{
-            Logger::getInstance()->console($error,0);
+        } else {
+            //控制台输出
+            Logger::getInstance()->console($error, 0);
         }
-
     }
 
-    function log(SplError $error)
+    /**
+     * @param SplError $error
+     * @return mixed|void
+     */
+    public function log(SplError $error)
     {
         // TODO: Implement log() method.
         Logger::getInstance()->log($error);

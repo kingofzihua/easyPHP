@@ -16,9 +16,10 @@ class UploadFile
     private $error;
     private $clientFileName;
     private $clientMediaType;
-    function __construct( $tempName,$size, $errorStatus, $clientFilename = null, $clientMediaType = null)
+
+    public function __construct($tempName, $size, $errorStatus, $clientFilename = null, $clientMediaType = null)
     {
-        $this->stream = new Stream(fopen($tempName,"r+"));
+        $this->stream = new Stream(fopen($tempName, "r+"));
         $this->error = $errorStatus;
         $this->size = $size;
         $this->clientFileName = $clientFilename;
@@ -34,7 +35,7 @@ class UploadFile
     public function moveTo($targetPath)
     {
         // TODO: Implement moveTo() method.
-        return file_put_contents($targetPath,$this->stream) ? true :false;
+        return file_put_contents($targetPath, $this->stream) ? true : false;
     }
 
     public function getSize()

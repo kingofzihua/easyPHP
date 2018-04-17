@@ -12,6 +12,7 @@ namespace Core\Component\Spl;
 abstract class SplBean implements \JsonSerializable
 {
     private $__varList = array();
+
     final function __construct($beanArray = array())
     {
         $this->__varList = $this->allVarKeys();
@@ -19,7 +20,8 @@ abstract class SplBean implements \JsonSerializable
         $this->arrayToBean($beanArray);
     }
 
-    final protected function setDefault(&$property,$val){
+    final protected function setDefault(&$property, $val)
+    {
         $property = $val;
         return $this;
     }
@@ -28,7 +30,7 @@ abstract class SplBean implements \JsonSerializable
     {
         // TODO: Implement jsonSerialize() method.
         $data = array();
-        foreach ($this->__varList as $var){
+        foreach ($this->__varList as $var) {
             $data[$var] = $this->$var;
         }
         return $data;
@@ -37,36 +39,39 @@ abstract class SplBean implements \JsonSerializable
     function __toString()
     {
         // TODO: Implement __toString() method.
-        return json_encode($this->jsonSerialize(),JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
+        return json_encode($this->jsonSerialize(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
 
     abstract protected function initialize();
 
-    private function allVarKeys(){
+    private function allVarKeys()
+    {
         $data = get_class_vars(static::class);
         unset($data['__varList']);
         return array_keys($data);
     }
 
-    function toArray(array $columns = null,$notNull = false){
-        if($columns){
+    function toArray(array $columns = null, $notNull = false)
+    {
+        if ($columns) {
             $data = $this->jsonSerialize();
             $ret = array_intersect_key($data, array_flip($columns));
-        }else{
+        } else {
             $ret = $this->jsonSerialize();
         }
-        if($notNull){
-            return array_filter($ret,function ($val){
+        if ($notNull) {
+            return array_filter($ret, function ($val) {
                 return !is_null($val);
             });
-        }else{
+        } else {
             return $ret;
         }
     }
 
-    function arrayToBean(array $data){
-        $data = array_intersect_key($data,array_flip($this->__varList));
-        foreach ($data as $var => $val){
+    function arrayToBean(array $data)
+    {
+        $data = array_intersect_key($data, array_flip($this->__varList));
+        foreach ($data as $var => $val) {
             $this->$var = $val;
         }
         return $this;

@@ -12,7 +12,9 @@ namespace Core\Http\Message;
 class Response extends Message
 {
     private $statusCode = 200;
+
     private $reasonPhrase = 'OK';
+
     public function getStatusCode()
     {
         // TODO: Implement getStatusCode() method.
@@ -22,13 +24,13 @@ class Response extends Message
     public function withStatus($code, $reasonPhrase = '')
     {
         // TODO: Implement withStatus() method.
-        if($code === $this->statusCode){
+        if ($code === $this->statusCode) {
             return $this;
-        }else{
+        } else {
             $this->statusCode = $code;
-            if(empty($reasonPhrase)){
+            if (empty($reasonPhrase)) {
                 $this->reasonPhrase = Status::getReasonPhrase($this->statusCode);
-            }else{
+            } else {
                 $this->reasonPhrase = $reasonPhrase;
             }
             return $this;

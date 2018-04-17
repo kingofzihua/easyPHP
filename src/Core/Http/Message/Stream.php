@@ -6,6 +6,7 @@
  * Date: 2017/6/13
  * Time: 下午8:01
  */
+
 namespace Core\Http\Message;
 
 class Stream
@@ -20,47 +21,52 @@ class Stream
         'c+b' => true, 'rt' => true, 'w+t' => true, 'r+t' => true,
         'x+t' => true, 'c+t' => true, 'a+' => true
     );
+    
     private $writeList = array(
         'w' => true, 'w+' => true, 'rw' => true, 'r+' => true, 'x+' => true,
         'c+' => true, 'wb' => true, 'w+b' => true, 'r+b' => true,
         'x+b' => true, 'c+b' => true, 'w+t' => true, 'r+t' => true,
         'x+t' => true, 'c+t' => true, 'a' => true, 'a+' => true
     );
-    function __construct($resource = '', array $options = [])
+
+    public function __construct($resource = '', array $options = [])
     {
         switch (gettype($resource)) {
-            case 'resource': {
-                $this->stream = $resource;
-                break;
-            }
-            case 'object':{
-                if(method_exists($resource, '__toString')) {
-                    $resource = $resource->__toString();
-                    $this->stream = fopen('php://memory', 'r+');
-                    if ($resource !== '') {
-                        fwrite($this->stream, $resource);
-                    }
+            case 'resource':
+                {
+                    $this->stream = $resource;
                     break;
-                }else{
-                    throw new \InvalidArgumentException('Invalid resource type: ' . gettype($resource));
                 }
-            }
-            default:{
-                $this->stream  = fopen('php://memory', 'r+');
-                try{
-                    $resource = (string)$resource;
-                    if ($resource !== '') {
-                        fwrite($this->stream, $resource);
+            case 'object':
+                {
+                    if (method_exists($resource, '__toString')) {
+                        $resource = $resource->__toString();
+                        $this->stream = fopen('php://memory', 'r+');
+                        if ($resource !== '') {
+                            fwrite($this->stream, $resource);
+                        }
+                        break;
+                    } else {
+                        throw new \InvalidArgumentException('Invalid resource type: ' . gettype($resource));
                     }
-                }catch (\Exception $exception){
-                    throw new \InvalidArgumentException('Invalid resource type: ' . gettype($resource));
                 }
-            }
+            default:
+                {
+                    $this->stream = fopen('php://memory', 'r+');
+                    try {
+                        $resource = (string)$resource;
+                        if ($resource !== '') {
+                            fwrite($this->stream, $resource);
+                        }
+                    } catch (\Exception $exception) {
+                        throw new \InvalidArgumentException('Invalid resource type: ' . gettype($resource));
+                    }
+                }
         }
         $info = stream_get_meta_data($this->stream);
         $this->seekable = $info['seekable'];
         $this->readable = isset($this->readList[$info['mode']]);
-        $this->writable =  isset($this->writeList[$info['mode']]);
+        $this->writable = isset($this->writeList[$info['mode']]);
     }
 
     public function __toString()
@@ -68,7 +74,7 @@ class Stream
         // TODO: Implement __toString() method.
         try {
             $this->seek(0);
-            return (string) stream_get_contents($this->stream);
+            return (string)stream_get_contents($this->stream);
         } catch (\Exception $e) {
             return '';
         }
@@ -78,7 +84,7 @@ class Stream
     {
         // TODO: Implement close() method.
         $res = $this->detach();
-        if(is_resource($res)){
+        if (is_resource($res)) {
             fclose($res);
         }
     }
@@ -101,7 +107,7 @@ class Stream
         $stats = fstat($this->stream);
         if (isset($stats['size'])) {
             return $stats['size'];
-        }else{
+        } else {
             return null;
         }
     }
@@ -212,6 +218,7 @@ class Stream
             return isset($meta[$key]) ? $meta[$key] : null;
         }
     }
+
     public function __destruct()
     {
         // TODO: Implement __destruct() method.

@@ -8,7 +8,11 @@
 
 namespace Core\Component\Spl;
 
-
+/**
+ * 标准的错误处理类？
+ * Class SplError
+ * @package Core\Component\Spl
+ */
 class SplError extends SplBean
 {
     protected $errorCode;
@@ -138,13 +142,12 @@ class SplError extends SplBean
     }
 
 
-
-
     /**
      * @param int $code 错误代码
      * @return array
      */
-    private function mapErrorCode($code) {
+    private function mapErrorCode($code)
+    {
         $errorType = $errorLevel = null;
         switch ($code) {
             case E_PARSE:
@@ -185,7 +188,7 @@ class SplError extends SplBean
     function __toString()
     {
         // TODO: Implement __toString() method.
-        list($this->errorType,$this->errorLevel) = $this->mapErrorCode($this->errorCode);
+        list($this->errorType, $this->errorLevel) = $this->mapErrorCode($this->errorCode);
         return "{$this->errorType} : {$this->description} in file {$this->file} in line {$this->line}";
     }
 

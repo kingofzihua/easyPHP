@@ -12,14 +12,16 @@ namespace Core\Component;
 trait Singleton
 {
     protected static $instance;
-    static function getInstance() {
-        if(self::$instance instanceof static){
+
+    static function getInstance()
+    {
+        if (self::$instance instanceof static) {
             return self::$instance;
-        }else{
-            $args = func_get_args ();
+        } else {
+            $args = func_get_args();
             $class = static::class;
-            $reflection = new \ReflectionClass ( $class );
-            self::$instance = $reflection->newInstanceArgs ( $args );
+            $reflection = new \ReflectionClass ($class);
+            self::$instance = $reflection->newInstanceArgs($args);
             return self::$instance;
         }
     }

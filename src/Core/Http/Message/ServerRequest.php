@@ -8,20 +8,31 @@
 
 namespace Core\Http\Message;
 
-
+/**
+ * Class ServerRequest
+ * @package Core\Http\Message
+ */
 class ServerRequest extends Request
 {
     private $attributes = [];
-    private $cookieParams = [];
-    private $parsedBody;
-    private $queryParams = [];
-    private $serverParams;
-    private $uploadedFiles = [];
-    function __construct(
-        $method = 'GET', Uri $uri = null, array $headers = null, Stream $body = null, $protocolVersion = '1.1',$serverParams = array()
+
+    private $cookieParams = []; //$_COOKIE
+
+    private $parsedBody; //$_POST
+
+    private $queryParams = [];//$_GET
+
+    private $serverParams; //$_SERVER
+
+    private $uploadedFiles = [];//$_FILE
+
+    public function __construct(
+        $method = 'GET', Uri $uri = null, array $headers = null,
+        Stream $body = null, $protocolVersion = '1.1', $serverParams = array()
     )
     {
         $this->serverParams = $serverParams;
+
         parent::__construct($method, $uri, $headers, $body, $protocolVersion);
     }
 
@@ -34,12 +45,12 @@ class ServerRequest extends Request
     public function getCookieParams($name = null)
     {
         // TODO: Implement getCookieParams() method.
-        if($name === null){
+        if ($name === null) {
             return $this->cookieParams;
-        }else{
-            if(isset($this->cookieParams[$name])){
+        } else {
+            if (isset($this->cookieParams[$name])) {
                 return $this->cookieParams[$name];
-            }else{
+            } else {
                 return null;
             }
         }
@@ -59,11 +70,12 @@ class ServerRequest extends Request
         return $this->queryParams;
     }
 
-    public function getQueryParam($name){
+    public function getQueryParam($name)
+    {
         $data = $this->getQueryParams();
-        if(isset($data[$name])){
+        if (isset($data[$name])) {
             return $data[$name];
-        }else{
+        } else {
             return null;
         }
     }
@@ -84,9 +96,9 @@ class ServerRequest extends Request
     public function getUploadedFile($name)
     {
         // TODO: Implement getUploadedFiles() method.
-        if(isset($this->uploadedFiles[$name])){
+        if (isset($this->uploadedFiles[$name])) {
             return $this->uploadedFiles[$name];
-        }else{
+        } else {
             return null;
         }
     }
@@ -105,13 +117,13 @@ class ServerRequest extends Request
     public function getParsedBody($name = null)
     {
         // TODO: Implement getParsedBody() method.
-        if($name !== null){
-            if(isset($this->parsedBody[$name])){
+        if ($name !== null) {
+            if (isset($this->parsedBody[$name])) {
                 return $this->parsedBody[$name];
-            }else{
+            } else {
                 return null;
             }
-        }else{
+        } else {
             return $this->parsedBody;
         }
     }

@@ -6,123 +6,182 @@
  * Date: 2017/6/13
  * Time: 下午7:01
  */
+
 namespace Core\Http\Message;
 
 class Message
 {
-    private $protocolVersion = '1.1';
-    private $headers = [];
-    private $body;
-    function __construct(array $headers = null,Stream $body = null,$protocolVersion = '1.1')
+    /**
+     * @var string
+     */
+    private $protocolVersion = '1.1'; //协议版本
+
+    /**
+     * @var array
+     */
+    private $headers = [];//header头信息
+
+    /**
+     * @var Stream
+     */
+    private $body;//内容
+
+
+    /**
+     * 实例化
+     * Message constructor.
+     * @param array|null $headers
+     * @param Stream|null $body
+     * @param string $protocolVersion
+     */
+    public function __construct(array $headers = null, Stream $body = null, $protocolVersion = '1.1')
     {
-        if($headers != null){
+        if ($headers != null) {
             $this->headers = $headers;
         }
-        if($body != null){
+        if ($body != null) {
             $this->body = $body;
         }
         $this->protocolVersion = $protocolVersion;
     }
 
+    /**
+     * 获取协议版本
+     * @return string
+     */
     public function getProtocolVersion()
     {
-        // TODO: Implement getProtocolVersion() method.
         return $this->protocolVersion;
     }
 
+    /**
+     * 设置协议版本
+     * @param $version
+     * @return $this
+     */
     public function withProtocolVersion($version)
     {
-        // TODO: Implement withProtocolVersion() method.
-        if($this->protocolVersion === $version){
-            return $this;
+        //如果当前版本不相同 就 覆盖
+        if ($this->protocolVersion !== $version) {
+            $this->protocolVersion = $version;
         }
-        $this->protocolVersion = $version;
+
         return $this;
     }
 
+    /**
+     * 获取所有的头信息
+     * @return array|null
+     */
     public function getHeaders()
     {
-        // TODO: Implement getHeaders() method.
         return $this->headers;
     }
 
+    /**
+     * 判断头信息是否存在
+     * @param $name
+     * @return bool
+     */
     public function hasHeader($name)
     {
-        // TODO: Implement hasHeader() method.
-        return array_key_exists($name,$this->headers);
+        return array_key_exists($name, $this->headers);
     }
 
+    /**
+     * 获取指定的header头
+     * @param $name
+     * @return array|mixed
+     */
     public function getHeader($name)
     {
-        // TODO: Implement getHeader() method.
-        if(array_key_exists($name,$this->headers)){
-            return $this->headers[$name];
-        }else{
-            return array();
-        }
+        return array_key_exists($name, $this->headers) ? $this->headers[$name] : [];
     }
 
+    /**
+     * 获取HeaderLine
+     * @param $name
+     * @return string
+     */
     public function getHeaderLine($name)
     {
-        // TODO: Implement getHeaderLine() method.
-        if(array_key_exists($name,$this->headers)){
-            return implode("; ",$this->headers[$name]);
-        }else{
-            return '';
-        }
+        return array_key_exists($name, $this->headers) ? implode("; ", $this->headers[$name]) : '';
     }
 
+    /**
+     * 添加或覆盖header头信息
+     * @param $name
+     * @param $value
+     * @return $this
+     */
     public function withHeader($name, $value)
     {
-        // TODO: Implement withHeader() method.
-        if(!is_array($value)){
+        if (!is_array($value)) {
             $value = [$value];
         }
-        if(isset($this->headers[$name]) &&  $this->headers[$name] === $value){
-            return $this;
-        }
-        $this->headers[$name] = $value;
-        return $this;
-    }
 
-    public function withAddedHeader($name, $value)
-    {
-        // TODO: Implement withAddedHeader() method.
-        if(!is_array($value)){
-            $value = [$value];
-        }
-        if(isset($this->headers[$name])){
-            $this->headers[$name] =  array_merge($this->headers[$name], $value);
-        }else{
+        //如果不存在 或者 值不相同
+        if (!isset($this->headers[$name]) || $this->headers[$name] === $value) {
+            //覆盖
             $this->headers[$name] = $value;
         }
+
         return $this;
     }
 
-    public function withoutHeader($name)
+    /**
+     * 追加header头信息
+     * @param $name
+     * @param $value
+     * @return $this
+     */
+    public function withAddedHeader($name, $value)
     {
-        // TODO: Implement withoutHeader() method.
-        if(isset($this->headers[$name])){
-            unset($this->headers[$name]);
-            return $this;
-        }else{
-            return $this;
+        if (!is_array($value)) {
+            $value = [$value];
         }
+
+        $this->headers[$name] = isset($this->headers[$name]) ? array_merge($this->headers[$name], $value) : $value;
+
+        return $this;
     }
 
+    /**
+     * 删除指定header头信息
+     * @param $name
+     * @return $this
+     */
+    public function withoutHeader($name)
+    {
+        if (isset($this->headers[$name])) {
+            unset($this->headers[$name]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * 获取 body
+     * @return Stream|null
+     */
     public function getBody()
     {
-        // TODO: Implement getBody() method.
-        if($this->body == null){
+        if ($this->body == null) {
             $this->body = new Stream('');
         }
+
         return $this->body;
     }
 
+    /**
+     * 替换body
+     * @param Stream $body
+     * @return $this
+     */
     public function withBody(Stream $body)
     {
-        // TODO: Implement withBody() method.
         $this->body = $body;
+
         return $this;
     }
 }

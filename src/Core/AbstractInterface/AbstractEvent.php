@@ -8,24 +8,34 @@
 
 namespace Core\AbstractInterface;
 
-
-
-use Core\Component\Spl\SplError;
 use Core\Http\Request;
 use Core\Http\Response;
+use Core\Component\Spl\SplError;
 
+/**
+ * 事件抽象类
+ * Class AbstractEvent
+ * @package Core\AbstractInterface
+ */
 abstract class AbstractEvent
 {
     protected static $instance;
-    static function getInstance(){
-        if(!isset(self::$instance)){
+
+    static function getInstance()
+    {
+        if (!isset(self::$instance)) {
             self::$instance = new static();
         }
         return self::$instance;
     }
-    abstract function frameInitialize();
-    abstract function onRequest(Request $request,Response $response);
-    abstract function onDispatcher(Request $request,Response $response,$targetControllerClass,$targetAction);
-    abstract function onResponse(Request $request,Response $response);
-    abstract function onFatalError(SplError $error,$debugTrace);
+
+    abstract public function frameInitialize();
+
+    abstract public function onRequest(Request $request, Response $response);
+
+    abstract public function onDispatcher(Request $request, Response $response, $targetControllerClass, $targetAction);
+
+    abstract public function onResponse(Request $request, Response $response);
+
+    abstract public function onFatalError(SplError $error, $debugTrace);
 }

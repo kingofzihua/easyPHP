@@ -9,12 +9,29 @@
 namespace Core\AbstractInterface;
 
 
-
 use Core\Component\Spl\SplError;
 
+/**
+ * Interface ErrorHandlerInterface
+ * @package Core\AbstractInterface
+ */
 interface ErrorHandlerInterface
 {
-    function handler(SplError $error);
-    function display(SplError $error);
-    function log(SplError $error);
+    /**
+     * @param SplError $error
+     * @return mixed
+     */
+    public function handler(SplError $error);
+
+    /**
+     * @param SplError $error
+     * @return mixed
+     */
+    public function display(SplError $error);
+
+    /**
+     * @param SplError $error
+     * @return mixed
+     */
+    public function log(SplError $error);
 }

@@ -8,36 +8,43 @@
 
 namespace Conf;
 
-
-use Core\AbstractInterface\AbstractEvent;
-use Core\Component\Spl\SplError;
 use Core\Http\Request;
 use Core\Http\Response;
+use Core\Component\Spl\SplError;
+use Core\AbstractInterface\AbstractEvent;
 
+/**
+ * 事件
+ * Class Event
+ * @package Conf
+ */
 class Event extends AbstractEvent
 {
-    function frameInitialize()
+    /**
+     * 初始化
+     */
+    public function frameInitialize()
     {
-        // TODO: Implement frameInitialize() method.
+        // 设置默认的时区
         date_default_timezone_set("Asia/Shanghai");
     }
 
-    function onRequest(Request $request, Response $response)
+    public function onRequest(Request $request, Response $response)
     {
         // TODO: Implement onRequest() method.
     }
 
-    function onDispatcher(Request $request, Response $response, $targetControllerClass, $targetAction)
+    public function onDispatcher(Request $request, Response $response, $targetControllerClass, $targetAction)
     {
         // TODO: Implement onDispatcher() method.
     }
 
-    function onResponse(Request $request, Response $response)
+    public function onResponse(Request $request, Response $response)
     {
         // TODO: Implement afterResponse() method.
     }
 
-    function onFatalError(SplError $error, $debugTrace)
+    public function onFatalError(SplError $error, $debugTrace)
     {
         // TODO: Implement onFatalError() method.
     }

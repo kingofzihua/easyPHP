@@ -8,7 +8,11 @@
 
 namespace Core\Http\Message;
 
-
+/**
+ * URI 处理
+ * Class Uri
+ * @package Core\Http\Message
+ */
 class Uri
 {
     private $host;
@@ -18,9 +22,10 @@ class Uri
     private $query;
     private $fragment;
     private $scheme;
+
     function __construct($url = '')
     {
-        if($url !== ''){
+        if ($url !== '') {
             $parts = parse_url($url);
             $this->scheme = isset($parts['scheme']) ? $parts['scheme'] : '';
             $this->userInfo = isset($parts['user']) ? $parts['user'] : '';
@@ -173,7 +178,7 @@ class Uri
         if ($this->scheme != '') {
             $uri .= $this->scheme . ':';
         }
-        if ($this->getAuthority() != ''|| $this->scheme === 'file') {
+        if ($this->getAuthority() != '' || $this->scheme === 'file') {
             $uri .= '//' . $this->getAuthority();
         }
         $uri .= $this->path;
