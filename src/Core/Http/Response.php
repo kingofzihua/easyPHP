@@ -9,6 +9,7 @@
 namespace Core\Http;
 
 use Conf\Event;
+use Core\Http\Message\Stream;
 use Core\UrlParser;
 use Core\Dispatcher;
 use Core\Http\Message\Status;
@@ -44,6 +45,10 @@ class Response extends HttpResponse
         return self::$instance;
     }
 
+    /**
+     * Response 结束
+     * @return bool
+     */
     public function end()
     {
         if (!$this->isEndResponse) {
@@ -54,24 +59,37 @@ class Response extends HttpResponse
         }
     }
 
+    /**
+     * Response是否结束
+     * @return int
+     */
     public function isEndResponse()
     {
         return $this->isEndResponse;
     }
 
+    /**
+     * 写入Response
+     * @param $obj
+     * @return bool
+     */
     public function write($obj)
     {
+        /**
+         * 如果已经结束的 不能再次添加了
+         */
         if (!$this->isEndResponse()) {
-            if (is_object($obj)) {
+            if (is_object($obj)) { //对象转化为字符串
                 if (method_exists($obj, "__toString")) {
                     $obj = $obj->__toString();
                 } else {
                     $obj = json_encode($obj, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
                 }
-            } else if (is_array($obj)) {
+            } else if (is_array($obj)) { //数组转化为字符串
                 $obj = json_encode($obj, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
             }
             $this->getBody()->write($obj);
+
             return true;
         } else {
             trigger_error("response has end");
@@ -79,6 +97,14 @@ class Response extends HttpResponse
         }
     }
 
+
+    /**
+     * Json形式返回
+     * @param int $statusCode
+     * @param null $result
+     * @param null $msg
+     * @return bool
+     */
     public function writeJson($statusCode = 200, $result = null, $msg = null)
     {
         if (!$this->isEndResponse()) {
@@ -98,6 +124,10 @@ class Response extends HttpResponse
         }
     }
 
+    /**
+     * 重定向
+     * @param $url
+     */
     public function redirect($url)
     {
         if (!$this->isEndResponse()) {
@@ -109,6 +139,17 @@ class Response extends HttpResponse
         }
     }
 
+    /**
+     * 设置COOKIE
+     * @param $name
+     * @param null $value
+     * @param null $expire
+     * @param null $path
+     * @param null $domain
+     * @param null $secure
+     * @param null $httponly
+     * @return bool
+     */
     public function setCookie($name, $value = null, $expire = null, $path = null, $domain = null, $secure = null, $httponly = null)
     {
         if (!$this->isEndResponse()) {
@@ -140,9 +181,16 @@ class Response extends HttpResponse
 
     }
 
+    /**
+     * 程序内部跳转
+     * @param $pathTo
+     * @param array $attribute
+     * @throws \ReflectionException
+     */
     public function forward($pathTo, array $attribute = array())
     {
         if (!$this->isEndResponse()) {
+            //判断跳转到地方是不是当前到路径，避免无限跳转
             if ($pathTo == UrlParser::pathInfo()) {
                 trigger_error("you can not forward a request in the same path : {$pathTo}");
             } else {

@@ -9,21 +9,40 @@
 namespace Core\Http\Message;
 
 
+/**
+ * Class Response
+ * @package Core\Http\Message
+ */
 class Response extends Message
 {
+    /**
+     * 默认状态码
+     * @var int
+     */
     private $statusCode = 200;
 
+    /**
+     * @var string
+     */
     private $reasonPhrase = 'OK';
 
+    /**
+     * 获取状态
+     * @return int
+     */
     public function getStatusCode()
     {
-        // TODO: Implement getStatusCode() method.
         return $this->statusCode;
     }
 
+    /**
+     * 设置状态
+     * @param $code
+     * @param string $reasonPhrase
+     * @return $this
+     */
     public function withStatus($code, $reasonPhrase = '')
     {
-        // TODO: Implement withStatus() method.
         if ($code === $this->statusCode) {
             return $this;
         } else {
@@ -37,9 +56,11 @@ class Response extends Message
         }
     }
 
+    /**
+     * @return string
+     */
     public function getReasonPhrase()
     {
-        // TODO: Implement getReasonPhrase() method.
         return $this->reasonPhrase;
     }
 }

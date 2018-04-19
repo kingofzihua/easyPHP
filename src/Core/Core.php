@@ -74,8 +74,8 @@ class Core
         //调度
         Dispatcher::getInstance()->dispatch($request, $response);
 
-        $status = $response->getStatusCode();
-        $reason = $response->getReasonPhrase();
+        $status = $response->getStatusCode();//获取返回的状态码
+        $reason = $response->getReasonPhrase();//获取
         //状态码有固定格式。
         header('HTTP/1.1 ' . $status . ' ' . $reason);
         // 确保FastCGI模式下正常
@@ -86,9 +86,9 @@ class Core
                 header($header . ':' . $sub);
             }
         }
-        echo $response->getBody()->__toString();
-        $response->getBody()->close();
-        Event::getInstance()->onResponse($request, $response);
+        echo $response->getBody()->__toString(); //response转化为字符串
+        $response->getBody()->close();//response关闭
+        Event::getInstance()->onResponse($request, $response);//触发Response响应事件
     }
 
 

@@ -14,18 +14,50 @@ namespace Core\Http\Message;
  */
 class ServerRequest extends Request
 {
+    /**
+     * @var array
+     */
     private $attributes = [];
 
-    private $cookieParams = []; //$_COOKIE
+    /**
+     * $_COOKIE
+     * @var array
+     */
+    private $cookieParams = [];
 
-    private $parsedBody; //$_POST
+    /**
+     * $_POST
+     * @var
+     */
+    private $parsedBody;
 
-    private $queryParams = [];//$_GET
+    /**
+     * $_GET
+     * @var array
+     */
+    private $queryParams = [];
 
-    private $serverParams; //$_SERVER
+    /**
+     * $_SERVER
+     * @var array
+     */
+    private $serverParams;
 
-    private $uploadedFiles = [];//$_FILE
+    /**
+     * $_FILE
+     * @var array
+     */
+    private $uploadedFiles = [];
 
+    /**
+     * ServerRequest constructor.
+     * @param string $method
+     * @param Uri|null $uri
+     * @param array|null $headers
+     * @param Stream|null $body
+     * @param string $protocolVersion
+     * @param array $serverParams
+     */
     public function __construct(
         $method = 'GET', Uri $uri = null, array $headers = null,
         Stream $body = null, $protocolVersion = '1.1', $serverParams = array()
@@ -36,134 +68,178 @@ class ServerRequest extends Request
         parent::__construct($method, $uri, $headers, $body, $protocolVersion);
     }
 
+    /**
+     * 获取$_SERVER
+     * @return array
+     */
     public function getServerParams()
     {
         // TODO: Implement getServerParams() method.
         return $this->serverParams;
     }
 
+    /**
+     * 获取$_COOKIE
+     * @param null $name
+     * @return array|mixed|null
+     */
     public function getCookieParams($name = null)
     {
-        // TODO: Implement getCookieParams() method.
-        if ($name === null) {
+
+        if (is_null($name)) {
             return $this->cookieParams;
-        } else {
-            if (isset($this->cookieParams[$name])) {
-                return $this->cookieParams[$name];
-            } else {
-                return null;
-            }
         }
 
-    }
-
-    public function withCookieParams(array $cookies)
-    {
-        // TODO: Implement withCookieParams() method.
-        $this->cookieParams = $cookies;
-        return $this;
-    }
-
-    public function getQueryParams()
-    {
-        // TODO: Implement getQueryParams() method.
-        return $this->queryParams;
-    }
-
-    public function getQueryParam($name)
-    {
-        $data = $this->getQueryParams();
-        if (isset($data[$name])) {
-            return $data[$name];
-        } else {
-            return null;
-        }
-    }
-
-    public function withQueryParams(array $query)
-    {
-        // TODO: Implement withQueryParams() method.
-        $this->queryParams = $query;
-        return $this;
-    }
-
-    public function getUploadedFiles()
-    {
-        // TODO: Implement getUploadedFiles() method.
-        return $this->uploadedFiles;
-    }
-
-    public function getUploadedFile($name)
-    {
-        // TODO: Implement getUploadedFiles() method.
-        if (isset($this->uploadedFiles[$name])) {
-            return $this->uploadedFiles[$name];
-        } else {
-            return null;
-        }
+        return isset($this->cookieParams[$name]) ? $this->cookieParams[$name] : null;
     }
 
     /**
+     * 设置Cookie
+     * @param array $cookies
+     * @return $this
+     */
+    public function withCookieParams(array $cookies)
+    {
+        $this->cookieParams = $cookies;
+
+        return $this;
+    }
+
+    /**
+     * 获取$_GET
+     * @return array
+     */
+    public function getQueryParams()
+    {
+        return $this->queryParams;
+    }
+
+    /**
+     * 获取指定的$_GET
+     * @param $name
+     * @return mixed|null
+     */
+    public function getQueryParam($name)
+    {
+        $data = $this->getQueryParams();
+
+        return isset($data[$name]) ? $data[$name] : null;
+    }
+
+    /**
+     * 设置$_GET
+     * @param array $query
+     * @return $this
+     */
+    public function withQueryParams(array $query)
+    {
+        $this->queryParams = $query;
+
+        return $this;
+    }
+
+    /**
+     * 获取$_FILES
+     * @return array
+     */
+    public function getUploadedFiles()
+    {
+        return $this->uploadedFiles;
+    }
+
+    /**
+     * 获取指定的$_FILES
+     * @param $name
+     * @return mixed|null
+     */
+    public function getUploadedFile($name)
+    {
+        return isset($this->uploadedFiles[$name]) ? $this->uploadedFiles[$name] : null;
+    }
+
+    /**
+     * 覆盖掉 $_FILES
      * @param array $uploadedFiles must be array of UploadFile Instance
      * @return ServerRequest
      */
     public function withUploadedFiles(array $uploadedFiles)
     {
-        // TODO: Implement withUploadedFiles() method.
         $this->uploadedFiles = $uploadedFiles;
+
         return $this;
     }
 
+    /**
+     * 获取$_POST
+     * @param null $name
+     * @return null
+     */
     public function getParsedBody($name = null)
     {
-        // TODO: Implement getParsedBody() method.
-        if ($name !== null) {
-            if (isset($this->parsedBody[$name])) {
-                return $this->parsedBody[$name];
-            } else {
-                return null;
-            }
-        } else {
+
+        if (is_null($name)) {
             return $this->parsedBody;
         }
+
+        return isset($this->parsedBody[$name]) ? $this->parsedBody[$name] : null;
     }
 
+    /**
+     * 覆盖$_POST
+     * @param $data
+     * @return $this
+     */
     public function withParsedBody($data)
     {
-        // TODO: Implement withParsedBody() method.
         $this->parsedBody = $data;
+
         return $this;
     }
 
+    /**
+     * 获取所有字段
+     * @return array
+     */
     public function getAttributes()
     {
-        // TODO: Implement getAttributes() method.
         return $this->attributes;
     }
 
+    /**
+     * 获取字段值
+     * @param $name
+     * @param null $default
+     * @return mixed|null
+     */
     public function getAttribute($name, $default = null)
     {
-        // TODO: Implement getAttribute() method.
-        if (false === array_key_exists($name, $this->attributes)) {
-            return $default;
-        }
-        return $this->attributes[$name];
+        return array_key_exists($name, $this->attributes) === false ? $default : $this->attributes[$name];
     }
 
+    /**
+     * 添加字段值
+     * @param $name
+     * @param $value
+     * @return $this
+     */
     public function withAttribute($name, $value)
     {
-        // TODO: Implement withAttribute() method.
         $this->attributes[$name] = $value;
+
         return $this;
     }
 
+    /**
+     * 删除字段值
+     * @param $name
+     * @return $this
+     */
     public function withoutAttribute($name)
     {
-        // TODO: Implement withoutAttribute() method.
-        if (false === array_key_exists($name, $this->attributes)) {
-            return $this;
+        if (array_key_exists($name, $this->attributes) !== false) {
+            unset($this->attributes[$name]);
         }
-        unset($this->attributes[$name]);
+
         return $this;
     }
 }

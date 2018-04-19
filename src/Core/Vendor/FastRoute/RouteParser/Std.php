@@ -6,11 +6,12 @@ use FastRoute\BadRouteException;
 use FastRoute\RouteParser;
 
 /**
- * Parses route strings of the following form:
+ * 解析以下表单的路由字符串
  *
  * "/user/{name}[/{id:[0-9]+}]"
  */
-class Std implements RouteParser {
+class Std implements RouteParser
+{
     const VARIABLE_REGEX = <<<'REGEX'
 \{
     \s* ([a-zA-Z_][a-zA-Z0-9_-]*) \s*
@@ -21,7 +22,8 @@ class Std implements RouteParser {
 REGEX;
     const DEFAULT_DISPATCH_REGEX = '[^/]+';
 
-    public function parse($route) {
+    public function parse($route)
+    {
         $routeWithoutClosingOptionals = rtrim($route, ']');
         $numOptionals = strlen($route) - strlen($routeWithoutClosingOptionals);
 
@@ -51,7 +53,8 @@ REGEX;
     /**
      * Parses a route string that does not contain optional segments.
      */
-    private function parsePlaceholders($route) {
+    private function parsePlaceholders($route)
+    {
         if (!preg_match_all(
             '~' . self::VARIABLE_REGEX . '~x', $route, $matches,
             PREG_OFFSET_CAPTURE | PREG_SET_ORDER

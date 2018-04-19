@@ -8,19 +8,39 @@
 
 namespace Core\Http\Message;
 
-
+/**
+ * Class Request
+ * @package Core\Http\Message
+ */
 class Request extends Message
 {
+    /**
+     * @var Uri
+     */
     private $uri;
 
+    /**
+     * GET POST
+     * @var string
+     */
     private $method;
 
+    /**
+     * ?
+     * @var
+     */
     private $target;
 
-    public function __construct(
-        $method = 'GET', Uri $uri = null, array $headers = null,
-        Stream $body = null, $protocolVersion = '1.1'
-    )
+    /**
+     * Request constructor.
+     * @param string $method
+     * @param Uri|null $uri
+     * @param array|null $headers
+     * @param Stream|null $body
+     * @param string $protocolVersion
+     */
+    public function __construct($method = 'GET', Uri $uri = null, array $headers = null,
+                                Stream $body = null, $protocolVersion = '1.1')
     {
         $this->method = $method;
 
@@ -31,6 +51,9 @@ class Request extends Message
         parent::__construct($headers, $body, $protocolVersion);
     }
 
+    /**
+     * @return string
+     */
     public function getRequestTarget()
     {
         if (!empty($this->target)) {
@@ -47,31 +70,52 @@ class Request extends Message
         } else {
             $target = "/";
         }
+
         return $target;
     }
 
+    /**
+     * @param $requestTarget
+     * @return $this
+     */
     public function withRequestTarget($requestTarget)
     {
         $this->target = $requestTarget;
         return $this;
     }
 
+    /**
+     * 获取 method
+     * @return string
+     */
     public function getMethod()
     {
         return $this->method;
     }
 
+    /**
+     * @param $method
+     * @return $this
+     */
     public function withMethod($method)
     {
         $this->method = strtoupper($method);
         return $this;
     }
 
+    /**
+     * @return Uri|null
+     */
     public function getUri()
     {
         return $this->uri;
     }
 
+    /**
+     * @param Uri $uri
+     * @param bool $preserveHost
+     * @return $this
+     */
     public function withUri(Uri $uri, $preserveHost = false)
     {
         if ($uri === $this->uri) {

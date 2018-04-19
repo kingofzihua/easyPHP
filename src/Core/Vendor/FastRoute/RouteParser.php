@@ -2,7 +2,14 @@
 
 namespace FastRoute;
 
-interface RouteParser {
+
+/**
+ * 将路由字符串解析为多个路由数据数组
+ * Interface RouteParser
+ * @package FastRoute
+ */
+interface RouteParser
+{
     /**
      * Parses a route string into multiple route data arrays.
      *
@@ -29,7 +36,7 @@ interface RouteParser {
      * Here one route string was converted into two route data arrays.
      *
      * @param string $route Route string to parse
-     * 
+     *
      * @return mixed[][] Array of route data arrays
      */
     public function parse($route);

@@ -9,36 +9,69 @@
 namespace Core\AbstractInterface;
 
 use Core\Component\Di;
-use Core\Component\SysConst;
 use Core\Http\Request;
 use Core\Http\Response;
-use FastRoute\DataGenerator\GroupCountBased;
+use Core\Component\SysConst;
 use FastRoute\RouteCollector;
 use FastRoute\RouteParser\Std;
+use FastRoute\DataGenerator\GroupCountBased;
 
+/**
+ * Class AbstractRouter
+ * @package Core\AbstractInterface
+ */
 abstract class AbstractRouter
 {
+    /**
+     * 是否缓存
+     * @var bool
+     */
     protected $isCache = false;
+
+    /**
+     * 缓存文件
+     * @var
+     */
     protected $cacheFile;
+
+    /**
+     * 路由控制器
+     * @var RouteCollector
+     */
     private $routeCollector;
-    function __construct()
+
+    /**
+     * AbstractRouter constructor.
+     */
+    public function __construct()
     {
-        $this->routeCollector = new RouteCollector(new Std(),new GroupCountBased());
+        $this->routeCollector = new RouteCollector(new Std(), new GroupCountBased());
         $this->addRouter($this->routeCollector);
     }
 
+    /**
+     * 添加路由
+     * @param RouteCollector $routeCollector
+     * @return mixed
+     */
     abstract function addRouter(RouteCollector $routeCollector);
 
-    /*
-     * to enable router file cache
-     * @param $cacheFile
+
+    /**
+     * 开启路由缓存
+     * @param null $cacheFile
+     * @throws \ReflectionException
      */
-    function enableCache($cacheFile = null){
+    public function enableCache($cacheFile = null)
+    {
         $this->isCache = true;
-        if($cacheFile === null){
+
+        //设置路由缓存文件
+        if ($cacheFile === null) {
             $temp = Di::getInstance()->get(SysConst::TEMP_DIRECTORY);
-            $this->cacheFile = ROOT."/{$temp}/router.cache";
-        }else{
+
+            $this->cacheFile = ROOT . "/{$temp}/router.cache";
+        } else {
             /*
              * suggest to set a file in memory path ，such as
              * /dev/shm/ in centos 6.x~7.x
@@ -47,23 +80,43 @@ abstract class AbstractRouter
         }
     }
 
-    /*
+    /**
+     * 返回缓存文件或者是false
      * @return mixed cacheFile or boolean false
      */
-    function isCache(){
-        if($this->isCache){
+    public function isCache()
+    {
+        if ($this->isCache) {
             return $this->cacheFile;
-        }else{
+        } else {
             return false;
         }
     }
-    function getRouteCollector(){
+
+    /**
+     * 获取路由控制器
+     * @return RouteCollector
+     */
+    public function getRouteCollector()
+    {
         return $this->routeCollector;
     }
-    function request(){
+
+    /**
+     * 返回 request
+     * @return Request
+     */
+    public function request()
+    {
         return Request::getInstance();
     }
-    function response(){
+
+    /**
+     * 返回 response
+     * @return Response
+     */
+    public function response()
+    {
         return Response::getInstance();
     }
 }

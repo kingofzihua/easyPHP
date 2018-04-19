@@ -29,21 +29,43 @@ class Event extends AbstractEvent
         date_default_timezone_set("Asia/Shanghai");
     }
 
+    /**
+     * 请求进来
+     * @param Request $request
+     * @param Response $response
+     */
     public function onRequest(Request $request, Response $response)
     {
         // TODO: Implement onRequest() method.
     }
 
+    /**
+     * 请求分发完毕
+     * @param Request $request
+     * @param Response $response
+     * @param $targetControllerClass 请求的 控制器
+     * @param $targetAction 请求的方法
+     */
     public function onDispatcher(Request $request, Response $response, $targetControllerClass, $targetAction)
     {
         // TODO: Implement onDispatcher() method.
     }
 
+    /**
+     * 请求响应
+     * @param Request $request
+     * @param Response $response
+     */
     public function onResponse(Request $request, Response $response)
     {
         // TODO: Implement afterResponse() method.
     }
 
+    /**
+     * 出错了
+     * @param SplError $error
+     * @param $debugTrace
+     */
     public function onFatalError(SplError $error, $debugTrace)
     {
         // TODO: Implement onFatalError() method.
