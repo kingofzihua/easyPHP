@@ -8,42 +8,62 @@
 
 namespace App\Controller;
 
-
 use Core\AbstractInterface\AbstractController;
 
+/**
+ * 默认显示控制器
+ * Class Index
+ * @package App\Controller
+ */
 class Index extends AbstractController
 {
 
-    function index()
+    /**
+     * 默认显示页面
+     * @return mixed|void
+     */
+    public function index()
     {
-        // TODO: Implement index() method.
-//        $this->response()->sendHeader("Content-type","text/html;charset=utf-8");
         $this->response()->write('
-    <style type="text/css">
-        *{ padding: 0; margin: 0; } 
-        div{ padding: 4px 48px;} 
-        body{ background: #fff; font-family: "微软雅黑"; color: #333;font-size:24px} 
-        h1{ font-size: 100px; font-weight: normal; margin-bottom: 12px; } 
-        p{ line-height: 1.8em; font-size: 36px } a,a:hover{color:blue;}
-    </style>
-    <div style="padding: 24px 48px;">
-        <h1>:)</h1><p>欢迎使用<b> easyPHP</b></p><br/>
-    </div>
- ');/*  url:domain/index.html  domain/   domain  */
+            <style type="text/css">
+                *{ padding: 0; margin: 0; }         
+                div{ padding: 4px 48px;} 
+                body{ background: #fff; font-family: "微软雅黑"; color: #333;font-size:24px} 
+                h1{ font-size: 100px; font-weight: normal; margin-bottom: 12px; } 
+                p{ line-height: 1.8em; font-size: 36px } a,a:hover{color:blue;}
+            </style>
+            <div style="padding: 24px 48px;">
+                <h1>:)</h1>
+                <p>欢迎使用<b> easyPHP</b></p>
+                <br/>
+            </div>
+         ');
     }
 
-    function onRequest($actionName)
+    /**
+     * 前置函数
+     * @param $actionName
+     * @return mixed|void
+     */
+    public function onRequest($actionName)
     {
-        // TODO: Implement onRequest() method.
     }
 
-    function actionNotFound($actionName = null, $arguments = null)
+    /**
+     * 方法不存在的时候
+     * @param null $actionName
+     * @param null $arguments
+     * @return mixed|void
+     */
+    public function actionNotFound($actionName = null, $arguments = null)
     {
-        // TODO: Implement actionNotFount() method.
     }
 
-    function afterAction()
+    /**
+     * 后置函数
+     * @return mixed|void
+     */
+    public function afterAction()
     {
-        // TODO: Implement afterResponse() method.
     }
 }
