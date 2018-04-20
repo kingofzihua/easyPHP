@@ -8,12 +8,13 @@
 
 namespace Core\Component;
 
-use Core\AbstractInterface\ErrorHandlerInterface;
-use Core\Component\Spl\SplError;
 use Core\Http\Request;
 use Core\Http\Response;
+use Core\Component\Spl\SplError;
+use Core\AbstractInterface\ErrorHandlerInterface;
 
 /**
+ * 错误处理
  * Class ErrorHandler
  * @package Core\Component
  */
@@ -46,6 +47,7 @@ class ErrorHandler implements ErrorHandlerInterface
     }
 
     /**
+     * 日志
      * @param SplError $error
      * @return mixed|void
      */

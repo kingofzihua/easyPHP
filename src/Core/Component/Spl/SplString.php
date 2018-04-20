@@ -9,23 +9,53 @@
 namespace Core\Component\Spl;
 
 
+/**
+ * 字符串处理
+ * Class SplString
+ * @package Core\Component\Spl
+ */
 class SplString
 {
+    /**
+     * @var string
+     */
     private $rawString;
-    function __construct($rawString = null)
+
+    /**
+     * SplString constructor.
+     * @param null $rawString
+     */
+    public function __construct($rawString = null)
     {
         $this->rawString = (string)$rawString;
     }
-    function setString($string){
+
+    /**
+     * @param $string
+     * @return $this
+     */
+    public function setString($string)
+    {
         $this->rawString = (String)$string;
         return $this;
     }
-    function split($length = 1){
-        $this->rawString =  str_split($this->rawString,$length);
+
+    /**
+     * @param int $length
+     * @return $this
+     */
+    public function split($length = 1)
+    {
+        $this->rawString = str_split($this->rawString, $length);
         return $this;
     }
 
-    function encodingConvert($desEncoding,$detectList = array(
+    /**
+     * @param $desEncoding
+     * @param array $detectList
+     * @return $this
+     */
+    public function encodingConvert($desEncoding, $detectList = array(
         'UTF-8',
         'ASCII',
         'GBK',
@@ -33,25 +63,34 @@ class SplString
         'LATIN1',
         'BIG5',
         "UCS-2"
-    )){
-        $fileType = mb_detect_encoding ( $this->rawString,$detectList);
+    ))
+    {
+        $fileType = mb_detect_encoding($this->rawString, $detectList);
         if ($fileType != $desEncoding) {
-            $this->rawString =  mb_convert_encoding ( $this->rawString, $desEncoding , $fileType );
+            $this->rawString = mb_convert_encoding($this->rawString, $desEncoding, $fileType);
             return $this;
-        }else{
+        } else {
             return $this;
         }
     }
 
-    function toUtf8(){
-        return  $this->encodingConvert("UTF-8");
+    /**
+     * @return SplString
+     */
+    public function toUtf8()
+    {
+        return $this->encodingConvert("UTF-8");
     }
 
     /*
      * special function for unicode
      */
-    function unicodeToUtf8(){
-        $this->rawString =  preg_replace_callback(
+    /**
+     * @return $this
+     */
+    public function unicodeToUtf8()
+    {
+        $this->rawString = preg_replace_callback(
             '/\\\\u([0-9a-f]{4})/i',
             create_function(
                 '$matches',
@@ -62,118 +101,220 @@ class SplString
         return $this;
     }
 
-    function toUnicode(){
+    /**
+     * @return $this
+     */
+    public function toUnicode()
+    {
         $raw = (string)$this->encodingConvert("UCS-2");
-        $len  = strlen($raw);
-        $str  = '';
-        for ($i = 0; $i < $len - 1; $i = $i + 2){
-            $c  = $raw[$i];
+        $len = strlen($raw);
+        $str = '';
+        for ($i = 0; $i < $len - 1; $i = $i + 2) {
+            $c = $raw[$i];
             $c2 = $raw[$i + 1];
-            if (ord($c) > 0){   //两个字节的文字
-                $str .= '\u'.base_convert(ord($c), 10, 16).str_pad(base_convert(ord($c2), 10, 16), 2, 0, STR_PAD_LEFT);
+            if (ord($c) > 0) {   //两个字节的文字
+                $str .= '\u' . base_convert(ord($c), 10, 16) . str_pad(base_convert(ord($c2), 10, 16), 2, 0, STR_PAD_LEFT);
             } else {
-                $str .= '\u'.str_pad(base_convert(ord($c2), 10, 16), 4, 0, STR_PAD_LEFT);
+                $str .= '\u' . str_pad(base_convert(ord($c2), 10, 16), 4, 0, STR_PAD_LEFT);
             }
         }
-        $this->rawString =  strtoupper($str);//转换为大写
+        $this->rawString = strtoupper($str);//转换为大写
         return $this;
     }
+
     /*
      * special function for unicode end
     */
 
-    function explode($separator){
-        return new SplArray(explode($separator,$this->rawString));
+    /**
+     * @param $separator
+     * @return SplArray
+     */
+    public function explode($separator)
+    {
+        return new SplArray(explode($separator, $this->rawString));
     }
-    function subString($start,$length){
-        $this->rawString =  substr($this->rawString,$start,$length);
+
+    /**
+     * @param $start
+     * @param $length
+     * @return $this
+     */
+    public function subString($start, $length)
+    {
+        $this->rawString = substr($this->rawString, $start, $length);
         return $this;
     }
-    function compare($str,$ignoreCase = 0){
-        if($ignoreCase){
-            return strcasecmp($str,$this->rawString);
-        }else{
-            return strcmp($str,$this->rawString);
+
+    /**
+     * @param $str
+     * @param int $ignoreCase
+     * @return int
+     */
+    public function compare($str, $ignoreCase = 0)
+    {
+        if ($ignoreCase) {
+            return strcasecmp($str, $this->rawString);
+        } else {
+            return strcmp($str, $this->rawString);
         }
     }
 
-    function lTrim($charList = " \t\n\r\0\x0B"){
-        $this->rawString =  ltrim($this->rawString,$charList);
-        return $this;
-    }
-    function rTrim($charList = " \t\n\r\0\x0B"){
-        $this->rawString =  rtrim($this->rawString,$charList);
-        return $this;
-    }
-    function trim($charList = " \t\n\r\0\x0B"){
-        $this->rawString =  trim($this->rawString,$charList);
+    /**
+     * @param string $charList
+     * @return $this
+     */
+    public function lTrim($charList = " \t\n\r\0\x0B")
+    {
+        $this->rawString = ltrim($this->rawString, $charList);
         return $this;
     }
 
-    function pad($length,$padString = null,$pad_type = STR_PAD_RIGHT ){
-        $this->rawString =  str_pad($this->rawString,$length,$padString,$pad_type);
-        return $this;
-    }
-    function repeat($times){
-        $this->rawString =  str_repeat($this->rawString,$times);
+    /**
+     * @param string $charList
+     * @return $this
+     */
+    public function rTrim($charList = " \t\n\r\0\x0B")
+    {
+        $this->rawString = rtrim($this->rawString, $charList);
         return $this;
     }
 
-    function length(){
+    /**
+     * @param string $charList
+     * @return $this
+     */
+    public function trim($charList = " \t\n\r\0\x0B")
+    {
+        $this->rawString = trim($this->rawString, $charList);
+        return $this;
+    }
+
+    /**
+     * @param $length
+     * @param null $padString
+     * @param int $pad_type
+     * @return $this
+     */
+    public function pad($length, $padString = null, $pad_type = STR_PAD_RIGHT)
+    {
+        $this->rawString = str_pad($this->rawString, $length, $padString, $pad_type);
+        return $this;
+    }
+
+    /**
+     * @param $times
+     * @return $this
+     */
+    public function repeat($times)
+    {
+        $this->rawString = str_repeat($this->rawString, $times);
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function length()
+    {
         return strlen($this->rawString);
     }
 
-    function toUpper(){
-        $this->rawString =  strtoupper($this->rawString);
+    /**
+     * @return $this
+     */
+    public function toUpper()
+    {
+        $this->rawString = strtoupper($this->rawString);
         return $this;
     }
-    function toLower(){
-        $this->rawString =  strtolower($this->rawString);
+
+    /**
+     * @return $this
+     */
+    public function toLower()
+    {
+        $this->rawString = strtolower($this->rawString);
         return $this;
     }
-    function stripTags($allowable_tags = null){
-        $this->rawString =  strip_tags($this->rawString,$allowable_tags);
+
+    /**
+     * @param null $allowable_tags
+     * @return $this
+     */
+    public function stripTags($allowable_tags = null)
+    {
+        $this->rawString = strip_tags($this->rawString, $allowable_tags);
         return $this;
     }
-    function replace($find,$replaceTo){
-        $this->rawString = str_replace($find,$replaceTo,$this->rawString);
+
+    /**
+     * @param $find
+     * @param $replaceTo
+     * @return $this
+     */
+    public function replace($find, $replaceTo)
+    {
+        $this->rawString = str_replace($find, $replaceTo, $this->rawString);
         return $this;
     }
 
 
-    function betweenInStr($startStr,$endStr){
-        $st =stripos($this->rawString,$startStr);
-        $ed =stripos($this->rawString,$endStr);
-        if(($st==false||$ed==false)||$st>=$ed) {
+    /**
+     * @param $startStr
+     * @param $endStr
+     * @return $this
+     */
+    public function betweenInStr($startStr, $endStr)
+    {
+        $st = stripos($this->rawString, $startStr);
+        $ed = stripos($this->rawString, $endStr);
+        if (($st == false || $ed == false) || $st >= $ed) {
             $this->rawString = '';
-        }else {
-            $this->rawString = substr($this->rawString,($st+1),($ed-$st-1));
+        } else {
+            $this->rawString = substr($this->rawString, ($st + 1), ($ed - $st - 1));
         }
         return $this;
     }
 
-    function regex($regex,$rawReturn = false){
-        preg_match($regex,$this->rawString,$result);
-        if(!empty($result)){
-            if($rawReturn){
+    /**
+     * @param $regex
+     * @param bool $rawReturn
+     * @return null
+     */
+    public function regex($regex, $rawReturn = false)
+    {
+        preg_match($regex, $this->rawString, $result);
+        if (!empty($result)) {
+            if ($rawReturn) {
                 return $result;
-            }else{
+            } else {
                 return $result[0];
             }
-        }else{
+        } else {
             return null;
         }
     }
 
-    function exist($find,$ignoreCase = true){
-        if($ignoreCase){
-            $label = stripos($this->rawString,$find);
-        }else{
-            $label = strpos($this->rawString,$find);
+    /**
+     * @param $find
+     * @param bool $ignoreCase
+     * @return bool
+     */
+    public function exist($find, $ignoreCase = true)
+    {
+        if ($ignoreCase) {
+            $label = stripos($this->rawString, $find);
+        } else {
+            $label = strpos($this->rawString, $find);
         }
         return $label === false ? false : true;
     }
-    function __toString()
+
+    /**
+     * @return string
+     */
+    public function __toString()
     {
         // TODO: Implement __toString() method.
         return (String)$this->rawString;

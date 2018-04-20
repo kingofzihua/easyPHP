@@ -9,15 +9,40 @@
 namespace Core\Component\Version;
 
 
+/**
+ * 版本控制
+ * Class Version
+ * @package Core\Component\Version
+ */
 class Version
 {
+    /**
+     * @var array
+     */
     private $maps = array();
+    /**
+     * @var
+     */
     private $defaultHandler;
-    function addPathMap($rowPathInfo,$targetPathOrClosureHandler){
+
+    /**
+     * @param $rowPathInfo
+     * @param $targetPathOrClosureHandler
+     * @return $this
+     */
+    function addPathMap($rowPathInfo, $targetPathOrClosureHandler)
+    {
         $this->maps[$rowPathInfo] = $targetPathOrClosureHandler;
         return $this;
     }
-    function setDefaultHandler($defaultPathOrClosureHandler){
+
+    /**
+     * 设置默认的处理方法
+     * @param $defaultPathOrClosureHandler
+     * @return $this
+     */
+    function setDefaultHandler($defaultPathOrClosureHandler)
+    {
         $this->defaultHandler = $defaultPathOrClosureHandler;
         return $this;
     }
@@ -30,10 +55,15 @@ class Version
         return $this->maps;
     }
 
-    public function getPathMap($rowPath){
-        if(isset($this->maps[$rowPath])){
+    /**
+     * @param $rowPath
+     * @return mixed|null
+     */
+    public function getPathMap($rowPath)
+    {
+        if (isset($this->maps[$rowPath])) {
             return $this->maps[$rowPath];
-        }else{
+        } else {
             return null;
         }
     }

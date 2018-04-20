@@ -9,6 +9,7 @@
 namespace Core\Component\Spl;
 
 /**
+ * 标准的数组类
  * Class SplArray
  * @package Core\Component\Spl
  */

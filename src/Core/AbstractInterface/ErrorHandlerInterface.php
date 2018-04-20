@@ -12,6 +12,7 @@ namespace Core\AbstractInterface;
 use Core\Component\Spl\SplError;
 
 /**
+ * 错误处理接口
  * Interface ErrorHandlerInterface
  * @package Core\AbstractInterface
  */
@@ -24,12 +25,14 @@ interface ErrorHandlerInterface
     public function handler(SplError $error);
 
     /**
+     * 错误输出
      * @param SplError $error
      * @return mixed
      */
     public function display(SplError $error);
 
     /**
+     * 错误记录到日志
      * @param SplError $error
      * @return mixed
      */

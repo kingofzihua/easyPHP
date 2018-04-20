@@ -21,7 +21,7 @@ use Core\AbstractInterface\AbstractEvent;
 class Event extends AbstractEvent
 {
     /**
-     * 初始化
+     * 初始化事件
      */
     public function frameInitialize()
     {

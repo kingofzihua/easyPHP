@@ -17,19 +17,20 @@ use FastRoute\RouteParser\Std;
 use FastRoute\DataGenerator\GroupCountBased;
 
 /**
+ * 路由抽象类
  * Class AbstractRouter
  * @package Core\AbstractInterface
  */
 abstract class AbstractRouter
 {
     /**
-     * 是否缓存
+     * 是否缓存路由
      * @var bool
      */
     protected $isCache = false;
 
     /**
-     * 缓存文件
+     * 缓存文件地址
      * @var
      */
     protected $cacheFile;

@@ -8,79 +8,113 @@
 
 namespace Core\Component\Version;
 
-
+use Core\UrlParser;
 use Core\Http\Request;
 use Core\Http\Response;
-use Core\UrlParser;
 
+/**
+ * Class Control
+ * @package Core\Component\Version
+ */
 class Control
 {
-    private $map = array();
-    private $defaultHandler;
-    /*
-     * handler if match a version，must return boolean true
+    /**
+     * @var array
      */
-    function addVersion($version,\Closure $handler){
+    private $map = array();
+
+    /**
+     * @var
+     */
+    private $defaultHandler;
+
+    /**
+     * 添加一个版本控制
+     * 处理程序如果匹配版本，则必须返回布尔值true
+     * @param $version
+     * @param \Closure $handler
+     * @return Version
+     */
+    function addVersion($version, \Closure $handler)
+    {
         $temp = new Version();
         $this->map[$version] = array(
-            "handler"=>$handler,
-            'version'=>$temp
+            "handler" => $handler,
+            'version' => $temp
         );
         return $temp;
     }
-    function startControl(){
+
+    /**
+     * @throws \ReflectionException
+     */
+    function startControl()
+    {
         $request = Request::getInstance();
         $response = Response::getInstance();
-        if($response->isEndResponse()){
+        if ($response->isEndResponse()) {
             return;
         }
-        if(!$request->getAttribute("version")){
+        if (!$request->getAttribute("version")) {
             //如果已经处于版本控制后的请求，则不再做重新匹配
             $target = null;
-            foreach ($this->map as $version => $item){
-                $flag = call_user_func($item['handler'],$request,$response);
-                if($flag){
+            foreach ($this->map as $version => $item) {
+                $flag = call_user_func($item['handler'], $request, $response);
+                if ($flag) {
                     $target = $item;
                     break;
                 }
             }
             $pathInfo = UrlParser::pathInfo();
-            if($target){
-                $request->withAttribute("version",$version);
+            if ($target) {
+                $request->withAttribute("version", $version);
                 $realPath = $target['version']->getPathMap($pathInfo);
-                if(is_string($realPath)){
+                if (is_string($realPath)) {
                     $response->forward($realPath);
-                }else if ($realPath instanceof \Closure){
-                    call_user_func($realPath,$request,$response);
-                }else{
+                } else if ($realPath instanceof \Closure) {
+                    call_user_func($realPath, $request, $response);
+                } else {
                     $handler = $target['version']->getDefaultHandler();
-                    if(is_string($handler)){
+                    if (is_string($handler)) {
                         $response->forward($handler);
-                    }else if ($handler instanceof \Closure){
-                        call_user_func($handler,$request,$response);
-                    }else{
-                        $this->defaultHandler($request,$response);
+                    } else if ($handler instanceof \Closure) {
+                        call_user_func($handler, $request, $response);
+                    } else {
+                        $this->defaultHandler($request, $response);
                     }
                 }
                 //在没有做任何响应的时候，交给defaultHandler
-                if(empty($response->getStatusCode()) && $response->getBody()){
-                    $this->defaultHandler($request,$response);
+                if (empty($response->getStatusCode()) && $response->getBody()) {
+                    $this->defaultHandler($request, $response);
                 }
             }
-            if($target !== null){
+            if ($target !== null) {
                 $response->end();
             }
         }
     }
-    function setDefaultHandler($defaultPathOrClosureHandler){
+
+    /**
+     * @param $defaultPathOrClosureHandler
+     * @return $this
+     */
+    function setDefaultHandler($defaultPathOrClosureHandler)
+    {
         $this->defaultHandler = $defaultPathOrClosureHandler;
         return $this;
     }
-    private function defaultHandler(Request $request,Response $response){
-        if(is_string($this->defaultHandler)){
+
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @throws \ReflectionException
+     */
+    private function defaultHandler(Request $request, Response $response)
+    {
+        if (is_string($this->defaultHandler)) {
             $response->forward($this->defaultHandler);
-        }else if($this->defaultHandler instanceof \Closure){
-            call_user_func($this->defaultHandler,$request,$response);
+        } else if ($this->defaultHandler instanceof \Closure) {
+            call_user_func($this->defaultHandler, $request, $response);
         }
     }
 }

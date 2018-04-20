@@ -9,7 +9,18 @@
 namespace Core\AbstractInterface;
 
 
+/**
+ * 日志接口
+ * Interface LoggerWriterInterface
+ * @package Core\AbstractInterface
+ */
 interface LoggerWriterInterface
 {
-    static function writeLog($obj,$logCategory,$timeStamp);
+    /**
+     * @param $obj
+     * @param $logCategory
+     * @param $timeStamp
+     * @return mixed
+     */
+    static function writeLog($obj, $logCategory, $timeStamp);
 }

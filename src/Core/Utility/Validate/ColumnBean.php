@@ -15,15 +15,17 @@ class ColumnBean extends SplBean
     protected $errorMsg;
     protected $ruleMap = array();
 
-    function withErrorMsg($msg){
+    function withErrorMsg($msg)
+    {
         $this->errorMsg = $msg;
         return $this;
     }
 
-    function addRule($rule,array $args = array(),$errorMsg = null){
+    function addRule($rule, array $args = array(), $errorMsg = null)
+    {
         $this->ruleMap[$rule] = array(
-            "args"=>$args,
-            "msg"=>$errorMsg,
+            "args" => $args,
+            "msg" => $errorMsg,
         );
         return $this;
     }

@@ -185,7 +185,7 @@ class SplError extends SplBean
         return array($errorType, $errorLevel);
     }
 
-    function __toString()
+    public function __toString()
     {
         // TODO: Implement __toString() method.
         list($this->errorType, $this->errorLevel) = $this->mapErrorCode($this->errorCode);
@@ -194,7 +194,6 @@ class SplError extends SplBean
 
     protected function initialize()
     {
-        // TODO: Implement initialize() method.
     }
 
 }
