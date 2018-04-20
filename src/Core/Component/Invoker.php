@@ -9,11 +9,20 @@
 namespace Core\Component;
 
 
+/**
+ * Class Invoker
+ * @package Core\Component
+ */
 class Invoker
 {
+
     /**
      * 当使用这个函数的时候 要使用try catch
-     * when you call exec,please surround with try catch
+     * @param callable $callable
+     * @param array $arguments
+     * @param int $timeout
+     * @return mixed
+     * @throws \Exception
      */
     static function exec(callable $callable, array $arguments = array(), $timeout = 1)
     {

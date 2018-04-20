@@ -9,6 +9,11 @@
 namespace Core\Component;
 
 
+/**
+ * 系统预定义常量
+ * Class SysConst
+ * @package Core\Component
+ */
 class SysConst
 {
     /*

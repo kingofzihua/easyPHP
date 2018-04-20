@@ -9,16 +9,44 @@
 namespace Core\Utility\Curl;
 
 
+/**
+ * CURL🔚数据
+ * Class Response
+ * @package Core\Utility\Curl
+ */
 class Response
 {
+    /**
+     * @var bool|string
+     */
     protected $body = '';
+    /**
+     * @var string
+     */
     protected $error;
+    /**
+     * @var int
+     */
     protected $errorNo;
+    /**
+     * @var mixed
+     */
     protected $curlInfo;
+    /**
+     * @var bool|string
+     */
     protected $headerLine;
+    /**
+     * @var array
+     */
     protected $cookies = array();
 
-    function __construct($rawResponse,$curlResource)
+    /**
+     * Response constructor.
+     * @param $rawResponse
+     * @param $curlResource
+     */
+    public function __construct($rawResponse, $curlResource)
     {
         $this->curlInfo = curl_getinfo($curlResource);
         $this->error = curl_error($curlResource);
@@ -27,12 +55,12 @@ class Response
         $this->headerLine = substr($rawResponse, 0, $this->curlInfo['header_size']);
         $this->body = substr($rawResponse, $this->curlInfo['header_size']);
         //处理头部中的cookie
-        preg_match_all("/Set-Cookie:(.*)\n/U",$this->headerLine,$ret);
-        if(!empty($ret[0])){
-            foreach($ret[0] as $item) {
-                $item = explode(";",$item)[0];
-                $item = ltrim($item,"Set-Cookie: ");
-                $item = explode("=",$item);
+        preg_match_all("/Set-Cookie:(.*)\n/U", $this->headerLine, $ret);
+        if (!empty($ret[0])) {
+            foreach ($ret[0] as $item) {
+                $item = explode(";", $item)[0];
+                $item = ltrim($item, "Set-Cookie: ");
+                $item = explode("=", $item);
                 $this->cookies[$item[0]] = rtrim($item[1]);
             }
         }
@@ -87,17 +115,26 @@ class Response
         return $this->cookies;
     }
 
-    public function getCookie($cookieName){
+    /**
+     * @param $cookieName
+     * @return mixed|null
+     */
+    public function getCookie($cookieName)
+    {
         return isset($this->cookies[$cookieName]) ? $this->cookies[$cookieName] : null;
     }
-    function __toString()
+
+    /**
+     * @return string
+     */
+    public function __toString()
     {
         // TODO: Implement __toString() method.
         $ret = '';
-        if(!empty($this->headerLine)){
-            $ret =  $this->headerLine."\n\r\n\r";
+        if (!empty($this->headerLine)) {
+            $ret = $this->headerLine . "\n\r\n\r";
         }
-        return $ret.$this->body;
+        return $ret . $this->body;
     }
 
 

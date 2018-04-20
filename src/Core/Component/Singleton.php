@@ -9,6 +9,11 @@
 namespace Core\Component;
 
 
+/**
+ * 单例模式
+ * Trait Singleton
+ * @package Core\Component
+ */
 trait Singleton
 {
     protected static $instance;

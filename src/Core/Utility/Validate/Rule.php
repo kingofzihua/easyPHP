@@ -11,6 +11,11 @@ namespace Core\Utility\Validate;
 
 use Core\Component\Spl\SplArray;
 
+/**
+ * 规则
+ * Class Rule
+ * @package Core\Utility\Validate
+ */
 class Rule
 {
     const ACTIVE_URL = 'ACTIVE_URL';
